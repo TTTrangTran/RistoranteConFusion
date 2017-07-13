@@ -2,15 +2,19 @@ var gulp=require('gulp');
 var htmlmin=require('gulp-htmlmin');
 var sass = require('gulp-sass');
 var cssmin=require('gulp-cssmin');
-
+var watch=require('gulp-watch');
 var path = {
-  src: {
-    html: '',
-    js: ''
-  }
+  sass: {
+    src:'dev/**/scss/*.scss',
+    dest:'dev/**/css'
+  },
+  css: {
+     src: 'dev/**/*.css',
+     dest: 'dev/**/css'
+  },
   html: {
-    src: 'dev/*.html',
-    dest: 'dist'
+    src: 'dist/*.html',
+    dest: 'dev'
   }
 }
 
@@ -19,27 +23,21 @@ gulp.task("htmlmin",function(){
       .pipe(htmlmin({collapseWhitespace: true}))
       .pipe(gulp.dest(path.html.dest))
 });
-// gulp.task('htmlmin',function(){
-//   gulp.src('dev/contactus.html')
-//       .pipe(htmlmin({collapseWhitespace: true}))
-//       .pipe(gulp.dest('dist'))
-// });
-// gulp.task('htmlmin',function(){
-//   gulp.src('dev/aboutus.html')
-//       .pipe(htmlmin({collapseWhitespace: true}))
-//       .pipe(gulp.dest('dist'))
-// });
+
 gulp.task('sass',function(){
-  gulp.src('dev/assets/scss/mystyles.scss')
+  gulp.src(path.sass.src)
       .pipe(sass().on('error',sass.logError))
-      .pipe(gulp.dest('dev/assets/css'))
+      .pipe(gulp.dest(path.sass.dest))
 });
 gulp.task('cssmin',function(){
-  gulp.src('dev/assets/css/mystyles.css')
-      .pipe(cssmin())
-      .pipe(gulp.dest('dist'))
+  gulp.src(path.css.src)
+      .pipe(cssmin({collapseWhitespace: true}))
+      .pipe(gulp.dest(path.css.dest))
 });
+// gulp.task('watch',function(){
+//   gulp.watch(path.html.src,['htmlmin'])
+// });
 
 gulp.task('default', ['htmlmin', 'sass', 'cssmin']);
-gulp.task('dev')
+// gulp.task('dev', ['htmlmin', 'sass', 'cssmin','watch']);
 gulp.task('build')
