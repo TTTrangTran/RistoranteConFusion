@@ -1,25 +1,26 @@
 {
-  "name": "confusion",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Trang Tran",
-  "license": "ISC",
-  "devDependencies": {
-    "browser-sync": "^2.18.12",
-    "gulp": "^3.9.1",
-    "gulp-cssmin": "^0.2.0",
-    "gulp-fontmin": "^0.7.4",
-    "gulp-html": "^0.4.7",
-    "gulp-htmlmin": "^3.0.0",
-    "gulp-jsmin": "^0.1.5",
-    "gulp-sass": "^3.1.0",
-    "gulp-scss": "^1.4.0",
-    "gulp-uglify": "^3.0.0",
-    "gulp-watch": "^4.3.11",
-    "gulp-watch-sass": "^1.1.4"
-  }
+    "name": "confusion",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "gulp",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Trang Tran",
+    "license": "ISC",
+    "devDependencies": {
+        "browser-sync": "^2.18.12",
+        "gulp": "^3.9.1",
+        "gulp-cssmin": "^0.2.0",
+        "gulp-fontmin": "^0.7.4",
+        "gulp-html": "^0.4.7",
+        "gulp-htmlmin": "^3.0.0",
+        "gulp-jsmin": "^0.1.5",
+        "gulp-sass": "^3.1.0",
+        "gulp-scss": "^1.4.0",
+        "gulp-uglify": "^3.0.0",
+        "gulp-watch": "^4.3.11",
+        "gulp-watch-sass": "^1.1.4"
+    }
 }
