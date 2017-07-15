@@ -1,7 +1,14 @@
-// utilities & variables: mixins, variables, icon, font
-@import "partials/font-awesome";
-// base: reset.scss, normalize.scss, base.scss
-// component: button, link, form, input...
-//
+//setting: mixins, variables, icon, font
+@import "vendor/font-awesome.min";
+@import "vendor/bootstrap-social";
+@import "vendor/bootstrap-theme.min";
+@import "vendor/bootstrap.min";
+//Tool: mixin font style
+// GENERIC: reset.scss, normalize.scss, base.scss
+@import "vendor/normalize";
+//Elements (heading, link, ul, il...) unclassed HTML elements
+//Objects (wrapper, margin, padding): classes elements
 @import "partials/row";
 @import "partials/layout";
+// Components: button, link, form, input..."product list"
+//Trump

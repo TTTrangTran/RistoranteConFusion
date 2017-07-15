@@ -1,12 +1,15 @@
 var gulp = require('gulp');
 var htmlmin = require('gulp-htmlmin');
-var sass = require('gulp-sass');
 var cssmin = require('gulp-cssmin');
-var jsmin = require('gulp-jsmin');
+var sass = require('gulp-sass');
+var uglify = require('gulp-uglify');
+var pump = require('pump');
 var fontmin = require('gulp-fontmin');
+var imagemin = require('gulp-imagemin');
 var watch = require('gulp-watch');
-var watchSass = require('gulp-watch-sass');
 var browserSync = require('browser-sync').create();
+var del = require('del');
+var runSequence = require('run-sequence');
 var path = {
     sass: {
         src: 'dev/assets/scss/*.scss',
@@ -27,24 +30,41 @@ var path = {
     fonts: {
         src: 'dev/assets/fonts/**',
         dest: 'dist/assets/fonts'
+    },
+    img: {
+        src: 'dev/assets/img/*',
+        dest: 'dist/assets/img'
     }
 }
-gulp.task('serve', ['htmlmin', 'sass'], function() {
+gulp.task('serve', ['htmlmin', 'sass', 'imagemin'], function() {
     browserSync.init({
         //injectChanges: true,
         open: true,
         server: './dist'
     });
-    gulp.watch([path.html.src, path.sass.src], ['htmlmin', 'sass']);
+    gulp.watch([path.html.src, path.sass.src], ['htmlmin', 'sass', 'imagemin']);
     gulp.watch([path.html.src, path.sass.src]).on('change', browserSync.reload);
 });
 gulp.task("htmlmin", function() {
     gulp.src(path.html.src)
-        .pipe(htmlmin({ collapseWhitespace: true }))
+        .pipe(htmlmin())
         .pipe(gulp.dest(path.html.dest))
         .pipe(browserSync.stream({ stream: true }))
 });
-
+gulp.task('uglifyjs', function(cb) {
+    pump([
+            gulp.src(path.js.src),
+            uglify(),
+            gulp.dest(path.js.dest)
+        ],
+        cb
+    );
+});
+gulp.task('imagemin', function() {
+    gulp.src(path.img.src)
+        .pipe(imagemin())
+        .pipe(gulp.dest(path.img.dest))
+});
 gulp.task('sass', function() {
     gulp.src(path.sass.src)
         .pipe(sass().on('error', sass.logError))
@@ -52,32 +72,19 @@ gulp.task('sass', function() {
         .pipe(gulp.dest(path.sass.dest))
         .pipe(browserSync.stream({ stream: true }))
 });
-gulp.task('cssmin', function() {
-    gulp.src(path.css.src)
-        .pipe(cssmin())
-        .pipe(gulp.dest(path.css.dest))
-});
-gulp.task("jsmin", function() {
-    gulp.src(path.js.src)
-        .pipe(jsmin({ collapseWhitespace: true }))
-        .pipe(gulp.dest(path.js.dest))
-});
-gulp.task("fontmin", function() {
-    gulp.src(path.fonts.src)
-        .pipe(fontmin({ collapseWhitespace: true }))
-        .pipe(gulp.dest(path.fonts.dest))
-});
+gulp.task('clean:dist', function() {
+    return del.sync('dist');
+})
 gulp.task('watch', function() {
     gulp.watch(path.html.src, ['htmlmin'])
-    gulp.watch(path.sass.src, ['sass', 'cssmin'])
+    gulp.watch(path.sass.src, ['sass'])
+    gulp.watch(path.js.src, ['uglifyjs'])
+    gulp.watch(path.img.src, ['imagemin'])
+    gulp.watch(path.fonts.src, ['fontmin'])
 });
-gulp.task('default', ['htmlmin', 'sass', 'jsmin', 'fontmin', 'serve']);
-// gulp.task('dev', ['htmlmin', 'sass', 'cssmin','watch']);
-//gulp.task('build');
+gulp.task('build', function(callback) {
+    runSequence('clean:dist', ['sass', 'htmlmin', 'uglifyjs', 'imagemin'])
+});
 
-/*
-  TODO:
-  - gulp clean
-  - gulp default: watch js, img
-  - gulp build
-*/
+gulp.task('default', ['htmlmin', 'sass', 'uglifyjs', 'imagemin', 'watch', 'serve']);
+// gulp.task('dev', ['htmlmin', 'sass', 'fontmin,'watch']);
